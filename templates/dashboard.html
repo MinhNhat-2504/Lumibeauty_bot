@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumi Beauty – Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════
+           RESET & ROOT
+           ═══════════════════════════════════════════ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --glass-bg:      rgba(255, 255, 255, 0.45);
+            --glass-bg2:     rgba(255, 255, 255, 0.55);
+            --glass-border:  rgba(255, 255, 255, 0.6);
+            --glass-shadow:  0 8px 32px rgba(31, 38, 135, 0.12);
+            --glass-blur:    blur(18px);
+
+            --bg-gradient:   linear-gradient(135deg, #e0e8f6 0%, #d5dff0 25%, #c8d8f0 50%, #dce4f0 75%, #e8ecf4 100%);
+            --sidebar-bg:    rgba(255, 255, 255, 0.35);
+            --sidebar-active: linear-gradient(135deg, #4a90d9, #5b7fd6);
+
+            --text:          #1a2332;
+            --text-secondary:#5a6a7e;
+            --text-light:    #8895a7;
+
+            --accent:        #4a90d9;
+            --accent2:       #e84393;
+            --success:       #27ae60;
+            --warning:       #f39c12;
+            --danger:        #e74c3c;
+            --info:          #3498db;
+
+            --radius:        16px;
+            --radius-sm:     10px;
+            --radius-xs:     6px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ═══════════════════════════════════════════
+           SIDEBAR
+           ═══════════════════════════════════════════ */
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            position: fixed; left: 0; top: 0;
+            background: var(--sidebar-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-right: 1px solid var(--glass-border);
+            padding: 24px 14px;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 8px 24px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+        .sidebar-brand .brand-icon {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, #e84393, #a855f7);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(232, 67, 147, 0.3);
+        }
+        .sidebar-brand h2 {
+            font-size: 16px; font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.3px;
+        }
+        .sidebar-brand span {
+            font-size: 10px; font-weight: 500;
+            color: var(--text-light);
+            display: block;
+        }
+
+        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 11px 14px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13.5px; font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+            text-decoration: none;
+        }
+        .nav-item:hover {
+            background: rgba(255,255,255,0.5);
+            color: var(--text);
+        }
+        .nav-item.active {
+            background: var(--sidebar-active);
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(74, 144, 217, 0.35);
+        }
+        .nav-item .nav-icon {
+            width: 20px; text-align: center; font-size: 16px;
+        }
+        .nav-item .nav-badge {
+            margin-left: auto;
+            background: rgba(232, 67, 147, 0.15);
+            color: var(--accent2);
+            font-size: 11px; font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        .nav-item.active .nav-badge {
+            background: rgba(255,255,255,0.25);
+            color: #fff;
+        }
+
+        .sidebar-footer {
+            border-top: 1px solid rgba(0,0,0,0.06);
+            padding-top: 16px;
+            margin-top: 12px;
+        }
+
+        /* ═══════════════════════════════════════════
+           MAIN CONTENT
+           ═══════════════════════════════════════════ */
+        .main {
+            margin-left: 220px;
+            flex: 1;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        /* ── Top Header ─────────────────────────── */
+        .top-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 32px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky; top: 0; z-index: 50;
+        }
+        .welcome-text h1 {
+            font-size: 22px; font-weight: 700;
+            color: var(--text);
+        }
+        .welcome-text p {
+            font-size: 13px; color: var(--text-light);
+            margin-top: 2px;
+        }
+        .header-actions {
+            display: flex; align-items: center; gap: 14px;
+        }
+        .header-actions .theme-toggles {
+            display: flex; gap: 4px;
+            background: rgba(0,0,0,0.06);
+            padding: 4px; border-radius: 20px;
+        }
+        .theme-toggles button {
+            width: 28px; height: 28px;
+            border: none; border-radius: 50%;
+            background: transparent;
+            cursor: pointer; font-size: 14px;
+            transition: background 0.2s;
+        }
+        .theme-toggles button.active { background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+        .admin-badge {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--glass-bg2);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 6px 14px 6px 6px;
+        }
+        .admin-avatar {
+            width: 30px; height: 30px;
+            background: linear-gradient(135deg, #e84393, #a855f7);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; color: #fff; font-weight: 700;
+        }
+        .admin-badge span { font-size: 13px; font-weight: 600; color: var(--text); }
+
+        /* ── Page Content ───────────────────────── */
+        .page-content { padding: 28px 32px; }
+
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+
+        .section-title {
+            font-size: 20px; font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+
+        /* ═══════════════════════════════════════════
+           GLASS CARDS
+           ═══════════════════════════════════════════ */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+            padding: 22px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.18);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .card-header h3 {
+            font-size: 15px; font-weight: 700;
+            color: var(--text);
+        }
+        .card-header .card-menu {
+            font-size: 16px; color: var(--text-light);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .card-header .card-menu:hover { background: rgba(0,0,0,0.05); }
+
+        /* ═══════════════════════════════════════════
+           STATS GRID
+           ═══════════════════════════════════════════ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        .stat-icon.i-users    { background: linear-gradient(135deg, #667eea, #764ba2); color:#fff; }
+        .stat-icon.i-orders   { background: linear-gradient(135deg, #f093fb, #f5576c); color:#fff; }
+        .stat-icon.i-products { background: linear-gradient(135deg, #4facfe, #00f2fe); color:#fff; }
+        .stat-icon.i-revenue  { background: linear-gradient(135deg, #43e97b, #38f9d7); color:#fff; }
+        .stat-info h4 {
+            font-size: 12px; font-weight: 600; color: var(--text-light);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .stat-info .value {
+            font-size: 26px; font-weight: 800;
+            color: var(--text);
+            margin-top: 2px;
+            line-height: 1;
+        }
+
+        /* ═══════════════════════════════════════════
+           DASHBOARD GRID (Charts)
+           ═══════════════════════════════════════════ */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+        .dashboard-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        /* ── Bar Chart ──────────────────────────── */
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            height: 160px;
+            padding: 10px 0;
+        }
+        .chart-bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .bar-container {
+            width: 100%;
+            height: 130px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 3px;
+        }
+        .bar {
+            width: 18px;
+            border-radius: 6px 6px 2px 2px;
+            transition: height 1s cubic-bezier(.4,0,.2,1);
+            position: relative;
+        }
+        .bar.primary  { background: linear-gradient(180deg, #4a90d9, #3a7bd5); }
+        .bar.secondary { background: linear-gradient(180deg, #f5a623, #f39c12); }
+        .bar-label {
+            font-size: 11px; font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .bar-value {
+            position: absolute;
+            top: -18px; left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px; font-weight: 700;
+            color: var(--text);
+        }
+
+        /* ── Pie Chart (CSS only) ───────────────── */
+        .pie-chart-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .pie-chart {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .pie-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .pie-legend-item {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 12px; font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .pie-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%; flex-shrink: 0;
+        }
+        .pie-legend-item .pie-pct {
+            margin-left: auto;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* ── Recent Activity / List Items ────── */
+        .activity-list { display: flex; flex-direction: column; gap: 10px; }
+        .activity-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px;
+            background: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: var(--radius-sm);
+            transition: background 0.2s;
+        }
+        .activity-item:hover { background: rgba(255,255,255,0.65); }
+        .activity-icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .activity-icon.green  { background: rgba(39,174,96,0.12); }
+        .activity-icon.blue   { background: rgba(52,152,219,0.12); }
+        .activity-icon.pink   { background: rgba(232,67,147,0.12); }
+        .activity-icon.orange { background: rgba(243,156,18,0.12); }
+        .activity-info { flex: 1; min-width: 0; }
+        .activity-info .act-title {
+            font-size: 13px; font-weight: 600; color: var(--text);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .activity-info .act-sub {
+            font-size: 11px; color: var(--text-light); margin-top: 1px;
+        }
+        .activity-badge {
+            font-size: 11px; font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+        .badge-success { background: rgba(39,174,96,0.12); color: var(--success); }
+        .badge-warning { background: rgba(243,156,18,0.12); color: var(--warning); }
+        .badge-danger  { background: rgba(231,76,60,0.12); color: var(--danger); }
+        .badge-info    { background: rgba(52,152,219,0.12); color: var(--info); }
+        .badge-skin    { background: rgba(168,85,247,0.1); color: #8b5cf6; }
+
+        /* ═══════════════════════════════════════════
+           DATA TABLES
+           ═══════════════════════════════════════════ */
+        .table-toolbar {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .search-input {
+            flex: 1; min-width: 200px;
+            background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px 10px 38px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.3s, background 0.3s;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238895a7' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.656a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 12px center;
+        }
+        .search-input:focus { border-color: var(--accent); background: rgba(255,255,255,0.7); }
+        .search-input::placeholder { color: var(--text-light); }
+        .filter-select {
+            background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: var(--text);
+            cursor: pointer;
+            outline: none;
+        }
+        .filter-select:focus { border-color: var(--accent); }
+        .btn-primary {
+            background: linear-gradient(135deg, #4a90d9, #5b7fd6);
+            border: none;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px; font-weight: 600;
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(74,144,217,0.3); }
+
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            font-size: 11px; font-weight: 700; color: var(--text-light);
+            text-transform: uppercase; letter-spacing: 0.6px;
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+        tbody tr {
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            transition: background 0.2s;
+        }
+        tbody tr:hover { background: rgba(74,144,217,0.04); }
+        tbody td {
+            padding: 12px 14px;
+            font-size: 13px;
+            color: var(--text);
+            vertical-align: middle;
+        }
+        .table-id {
+            font-family: 'Inter', monospace;
+            font-size: 11px;
+            background: rgba(0,0,0,0.04);
+            padding: 3px 8px;
+            border-radius: var(--radius-xs);
+            color: var(--text-secondary);
+        }
+        .status-select {
+            background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            padding: 6px 10px;
+            cursor: pointer;
+            outline: none;
+        }
+        .btn-delete {
+            background: rgba(231,76,60,0.08);
+            border: 1px solid rgba(231,76,60,0.15);
+            color: var(--danger);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px; font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-delete:hover { background: rgba(231,76,60,0.15); }
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-light);
+        }
+        .empty-state .empty-icon { font-size: 42px; display: block; margin-bottom: 10px; }
+
+        /* ═══════════════════════════════════════════
+           TOAST
+           ═══════════════════════════════════════════ */
+        .toast-container { position: fixed; top: 80px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+        .toast {
+            background: var(--glass-bg2);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-left: 4px solid var(--success);
+            border-radius: var(--radius-sm);
+            padding: 14px 20px;
+            font-size: 13px; font-weight: 500;
+            color: var(--text);
+            animation: toastIn 0.4s cubic-bezier(.4,0,.2,1);
+            box-shadow: var(--glass-shadow);
+        }
+        .toast.error { border-left-color: var(--danger); }
+        @keyframes toastIn { from { opacity:0; transform: translateX(40px); } to { opacity:1; transform: translateX(0); } }
+
+        .loading-shimmer {
+            background: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 6px; height: 18px; width: 70px; display: inline-block;
+        }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        /* ═══════════════════════════════════════════
+           DARK MODE
+           ═══════════════════════════════════════════ */
+        body.dark {
+            --glass-bg:      rgba(30, 30, 55, 0.65);
+            --glass-bg2:     rgba(30, 30, 55, 0.75);
+            --glass-border:  rgba(255, 255, 255, 0.08);
+            --glass-shadow:  0 8px 32px rgba(0, 0, 0, 0.4);
+
+            --bg-gradient:   linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            --sidebar-bg:    rgba(20, 20, 40, 0.6);
+            --sidebar-active: linear-gradient(135deg, #e84393, #a855f7);
+
+            --text:          #e8e8f0;
+            --text-secondary: #a0a8c0;
+            --text-light:    #6b7394;
+        }
+        body.dark .search-input {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.1);
+        }
+        body.dark .search-input:focus { background: rgba(255,255,255,0.1); }
+        body.dark .filter-select {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.1);
+        }
+        body.dark .status-select {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.1);
+        }
+        body.dark .activity-item {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(255,255,255,0.06);
+        }
+        body.dark .activity-item:hover { background: rgba(255,255,255,0.08); }
+        body.dark .table-id { background: rgba(255,255,255,0.06); color: #a0a8c0; }
+        body.dark .btn-delete {
+            background: rgba(231,76,60,0.12);
+            border-color: rgba(231,76,60,0.25);
+        }
+        body.dark .theme-toggles { background: rgba(255,255,255,0.08); }
+        body.dark .theme-toggles button.active { background: rgba(255,255,255,0.12); box-shadow: none; }
+        body.dark .admin-badge { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
+        body.dark .loading-shimmer {
+            background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+            background-size: 200% 100%;
+        }
+        body, body * { transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease; }
+
+        /* ═══════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════ */
+        @media (max-width: 1100px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .dashboard-grid-3 { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .sidebar { width: 64px; padding: 16px 8px; }
+            .sidebar-brand h2, .sidebar-brand span, .nav-item .nav-text, .nav-item .nav-badge { display: none; }
+            .nav-item { justify-content: center; padding: 11px; }
+            .main { margin-left: 64px; }
+            .top-header { padding: 14px 16px; }
+            .page-content { padding: 16px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ════════════════════════════════════════════
+         SIDEBAR
+         ════════════════════════════════════════════ -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">🌸</div>
+            <div>
+                <h2>LUMI BEAUTY</h2>
+                <span>Admin Panel</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a class="nav-item" data-page="users" onclick="showPage('users')">
+                <span class="nav-icon">👥</span>
+                <span class="nav-text">Người dùng</span>
+                <span class="nav-badge" id="sidebar-badge-users">0</span>
+            </a>
+            <a class="nav-item" data-page="orders" onclick="showPage('orders')">
+                <span class="nav-icon">📦</span>
+                <span class="nav-text">Đơn hàng</span>
+                <span class="nav-badge" id="sidebar-badge-orders">0</span>
+            </a>
+            <a class="nav-item" data-page="products" onclick="showPage('products')">
+                <span class="nav-icon">💄</span>
+                <span class="nav-text">Sản phẩm</span>
+                <span class="nav-badge" id="sidebar-badge-products">0</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a class="nav-item" onclick="location.reload()">
+                <span class="nav-icon">🔄</span>
+                <span class="nav-text">Làm mới</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ════════════════════════════════════════════
+         MAIN
+         ════════════════════════════════════════════ -->
+    <div class="main">
+        <header class="top-header">
+            <div class="welcome-text">
+                <h1>Xin chào, Admin! 👋</h1>
+                <p>Chào mừng bạn đến với Lumi Beauty Workspace</p>
+            </div>
+            <div class="header-actions">
+                <div class="theme-toggles" id="theme-toggles">
+                    <button id="btn-light" class="active" title="Sáng" onclick="setTheme('light')">☀️</button>
+                    <button id="btn-dark" title="Tối" onclick="setTheme('dark')">🌙</button>
+                </div>
+                <div class="admin-badge">
+                    <div class="admin-avatar">A</div>
+                    <span>Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-content">
+            <!-- ═══════ PAGE: Dashboard ═══════ -->
+            <section class="page-section active" id="page-dashboard">
+                <h2 class="section-title">Dashboard Overview</h2>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon i-users">👥</div>
+                        <div class="stat-info">
+                            <h4>Người dùng</h4>
+                            <div class="value" id="stat-users"><span class="loading-shimmer"></span></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon i-orders">📦</div>
+                        <div class="stat-info">
+                            <h4>Đơn hàng</h4>
+                            <div class="value" id="stat-orders"><span class="loading-shimmer"></span></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon i-products">💄</div>
+                        <div class="stat-info">
+                            <h4>Sản phẩm</h4>
+                            <div class="value" id="stat-products"><span class="loading-shimmer"></span></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon i-revenue">💰</div>
+                        <div class="stat-info">
+                            <h4>Doanh thu</h4>
+                            <div class="value" id="stat-revenue"><span class="loading-shimmer"></span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts row -->
+                <div class="dashboard-grid">
+                    <!-- Bar Chart: Orders per day or product categories -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3>📊 Thống kê đơn hàng theo trạng thái</h3>
+                            <span class="card-menu">•••</span>
+                        </div>
+                        <div class="chart-bars" id="order-bar-chart"></div>
+                    </div>
+
+                    <!-- Pie Chart: Order status -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3>🎯 Tỉ lệ trạng thái</h3>
+                            <span class="card-menu">•••</span>
+                        </div>
+                        <div class="pie-chart-container" id="order-pie-chart"></div>
+                    </div>
+                </div>
+
+                <!-- Recent orders -->
+                <div class="dashboard-grid-3">
+                    <div class="glass-card" style="grid-column: span 2">
+                        <div class="card-header">
+                            <h3>🕐 Đơn hàng gần đây</h3>
+                            <span class="card-menu">•••</span>
+                        </div>
+                        <div class="activity-list" id="recent-orders"></div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h3>🏆 Sản phẩm bán chạy</h3>
+                            <span class="card-menu">•••</span>
+                        </div>
+                        <div class="activity-list" id="top-products"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════ PAGE: Users ═══════ -->
+            <section class="page-section" id="page-users">
+                <h2 class="section-title">👥 Quản lý Người dùng</h2>
+                <div class="glass-card">
+                    <div class="table-toolbar">
+                        <input type="text" class="search-input" id="search-users" placeholder="Tìm theo username hoặc ID...">
+                        <button class="btn-primary" onclick="loadUsers()">🔄 Tải lại</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Telegram ID</th>
+                                <th>Username</th>
+                                <th>Loại da</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-users">
+                            <tr><td colspan="4" class="empty-state"><span class="empty-icon">⏳</span>Đang tải...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ═══════ PAGE: Orders ═══════ -->
+            <section class="page-section" id="page-orders">
+                <h2 class="section-title">📦 Quản lý Đơn hàng</h2>
+                <div class="glass-card">
+                    <div class="table-toolbar">
+                        <input type="text" class="search-input" id="search-orders" placeholder="Tìm theo tên KH hoặc sản phẩm...">
+                        <select class="filter-select" id="filter-orders" onchange="loadOrders()">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="Đang xử lý">🟡 Đang xử lý</option>
+                            <option value="Đã giao">🟢 Đã giao</option>
+                            <option value="Đã hủy">🔴 Đã hủy</option>
+                        </select>
+                        <button class="btn-primary" onclick="loadOrders()">🔄 Tải lại</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Khách hàng</th>
+                                <th>Sản phẩm</th>
+                                <th>SL</th>
+                                <th>Địa chỉ</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày tạo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-orders">
+                            <tr><td colspan="7" class="empty-state"><span class="empty-icon">⏳</span>Đang tải...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ═══════ PAGE: Products ═══════ -->
+            <section class="page-section" id="page-products">
+                <h2 class="section-title">💄 Quản lý Sản phẩm</h2>
+                <div class="glass-card">
+                    <div class="table-toolbar">
+                        <input type="text" class="search-input" id="search-products" placeholder="Tìm sản phẩm...">
+                        <button class="btn-primary" onclick="loadProducts()">🔄 Tải lại</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Giá (VNĐ)</th>
+                                <th>Loại da phù hợp</th>
+                                <th>Mô tả</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-products">
+                            <tr><td colspan="5" class="empty-state"><span class="empty-icon">⏳</span>Đang tải...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+    /* ══════════════════════════════════════════════
+       UTILITY FUNCTIONS
+       ══════════════════════════════════════════════ */
+    function showToast(msg, isError = false) {
+        const c = document.getElementById('toast-container');
+        const t = document.createElement('div');
+        t.className = 'toast' + (isError ? ' error' : '');
+        t.textContent = msg;
+        c.appendChild(t);
+        setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(() => t.remove(), 300); }, 3000);
+    }
+    function fmt(n) { return new Intl.NumberFormat('vi-VN').format(n); }
+    function fmtDate(iso) {
+        if (!iso) return '—';
+        const d = new Date(iso);
+        return d.toLocaleDateString('vi-VN') + ' ' + d.toLocaleTimeString('vi-VN', { hour:'2-digit', minute:'2-digit' });
+    }
+    function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+    /* ══════════════════════════════════════════════
+       PAGE NAVIGATION
+       ══════════════════════════════════════════════ */
+    function showPage(page) {
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
+        document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+        document.getElementById('page-' + page).classList.add('active');
+    }
+
+    /* ══════════════════════════════════════════════
+       STATS
+       ══════════════════════════════════════════════ */
+    async function loadStats() {
+        try {
+            const r = await fetch('/api/stats');
+            const d = await r.json();
+            document.getElementById('stat-users').textContent = d.users;
+            document.getElementById('stat-orders').textContent = d.orders;
+            document.getElementById('stat-products').textContent = d.products;
+            document.getElementById('stat-revenue').textContent = fmt(d.revenue) + ' VND';
+            document.getElementById('sidebar-badge-users').textContent = d.users;
+            document.getElementById('sidebar-badge-orders').textContent = d.orders;
+            document.getElementById('sidebar-badge-products').textContent = d.products;
+        } catch (e) { console.error('Stats error:', e); }
+    }
+
+    /* ══════════════════════════════════════════════
+       DASHBOARD CHARTS
+       ══════════════════════════════════════════════ */
+    let cachedOrders = [], cachedProducts = [];
+
+    async function loadDashboardCharts() {
+        try {
+            const [ordersRes, productsRes] = await Promise.all([
+                fetch('/api/orders'),
+                fetch('/api/products')
+            ]);
+            cachedOrders = await ordersRes.json();
+            cachedProducts = await productsRes.json();
+
+            renderBarChart();
+            renderPieChart();
+            renderRecentOrders();
+            renderTopProducts();
+        } catch (e) { console.error('Charts error:', e); }
+    }
+
+    function renderBarChart() {
+        const counts = { 'Đang xử lý': 0, 'Đã giao': 0, 'Đã hủy': 0 };
+        cachedOrders.forEach(o => { if (counts[o.status] !== undefined) counts[o.status]++; });
+        const maxVal = Math.max(...Object.values(counts), 1);
+        const colors = { 'Đang xử lý': '#f5a623', 'Đã giao': '#27ae60', 'Đã hủy': '#e74c3c' };
+        const icons = { 'Đang xử lý': '🟡', 'Đã giao': '🟢', 'Đã hủy': '🔴' };
+
+        document.getElementById('order-bar-chart').innerHTML = Object.entries(counts).map(([status, count]) => `
+            <div class="chart-bar-group">
+                <div class="bar-container">
+                    <div class="bar" style="height:${Math.max((count/maxVal)*120, 8)}px; background:${colors[status]}; width:32px;">
+                        <span class="bar-value">${count}</span>
+                    </div>
+                </div>
+                <span class="bar-label">${icons[status]} ${status}</span>
+            </div>
+        `).join('');
+    }
+
+    function renderPieChart() {
+        const counts = { 'Đang xử lý': 0, 'Đã giao': 0, 'Đã hủy': 0 };
+        cachedOrders.forEach(o => { if (counts[o.status] !== undefined) counts[o.status]++; });
+        const total = cachedOrders.length || 1;
+        const colors = { 'Đang xử lý': '#f5a623', 'Đã giao': '#27ae60', 'Đã hủy': '#e74c3c' };
+
+        // Build conic-gradient
+        let gradientParts = [];
+        let cumulative = 0;
+        Object.entries(counts).forEach(([status, count]) => {
+            const pct = (count / total) * 100;
+            gradientParts.push(`${colors[status]} ${cumulative}% ${cumulative + pct}%`);
+            cumulative += pct;
+        });
+
+        const legendHtml = Object.entries(counts).map(([status, count]) => {
+            const pct = Math.round((count / total) * 100);
+            return `<div class="pie-legend-item">
+                <span class="pie-dot" style="background:${colors[status]}"></span>
+                ${status}
+                <span class="pie-pct">${pct}%</span>
+            </div>`;
+        }).join('');
+
+        document.getElementById('order-pie-chart').innerHTML = `
+            <div class="pie-chart" style="background: conic-gradient(${gradientParts.join(', ')})"></div>
+            <div class="pie-legend">${legendHtml}</div>
+        `;
+    }
+
+    function renderRecentOrders() {
+        const recent = cachedOrders.slice(0, 5);
+        const icons = { 'Đang xử lý': 'orange', 'Đã giao': 'green', 'Đã hủy': 'pink' };
+        const badges = { 'Đang xử lý': 'badge-warning', 'Đã giao': 'badge-success', 'Đã hủy': 'badge-danger' };
+
+        document.getElementById('recent-orders').innerHTML = recent.length === 0
+            ? '<div class="empty-state"><span class="empty-icon">📭</span>Chưa có đơn hàng</div>'
+            : recent.map(o => `
+                <div class="activity-item">
+                    <div class="activity-icon ${icons[o.status] || 'blue'}">📦</div>
+                    <div class="activity-info">
+                        <div class="act-title">${esc(o.customer_name || 'Khách hàng')} — ${esc(o.product_name)}</div>
+                        <div class="act-sub">${fmtDate(o.created_at)} · SL: ${o.quantity}</div>
+                    </div>
+                    <span class="activity-badge ${badges[o.status] || 'badge-info'}">${o.status}</span>
+                </div>
+            `).join('');
+    }
+
+    function renderTopProducts() {
+        // Count how many times each product appears in orders
+        const productCount = {};
+        cachedOrders.forEach(o => {
+            const name = o.product_name || 'Unknown';
+            productCount[name] = (productCount[name] || 0) + (o.quantity || 1);
+        });
+        const sorted = Object.entries(productCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        const colorClasses = ['green', 'blue', 'pink', 'orange', 'green'];
+
+        document.getElementById('top-products').innerHTML = sorted.length === 0
+            ? '<div class="empty-state"><span class="empty-icon">💄</span>Chưa có dữ liệu</div>'
+            : sorted.map(([name, qty], i) => `
+                <div class="activity-item">
+                    <div class="activity-icon ${colorClasses[i % colorClasses.length]}">🏷️</div>
+                    <div class="activity-info">
+                        <div class="act-title">${esc(name)}</div>
+                        <div class="act-sub">Đã bán</div>
+                    </div>
+                    <span class="activity-badge badge-info">${qty} sp</span>
+                </div>
+            `).join('');
+    }
+
+    /* ══════════════════════════════════════════════
+       USERS TABLE
+       ══════════════════════════════════════════════ */
+    async function loadUsers() {
+        const search = document.getElementById('search-users').value;
+        try {
+            const r = await fetch('/api/users?search=' + encodeURIComponent(search));
+            const users = await r.json();
+            document.getElementById('sidebar-badge-users').textContent = users.length;
+            const tbody = document.getElementById('table-users');
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="empty-state"><span class="empty-icon">😶</span>Không có người dùng nào</td></tr>';
+                return;
+            }
+            tbody.innerHTML = users.map(u => `
+                <tr>
+                    <td><span class="table-id">${u.telegram_id}</span></td>
+                    <td><strong>@${esc(u.username || 'unknown')}</strong></td>
+                    <td>${u.skintype ? `<span class="activity-badge badge-skin">${esc(u.skintype)}</span>` : '<span style="color:var(--text-light)">Chưa chọn</span>'}</td>
+                    <td><button class="btn-delete" onclick="deleteUser('${u.telegram_id}')">🗑️ Xóa</button></td>
+                </tr>
+            `).join('');
+        } catch (e) { console.error('Users error:', e); showToast('Lỗi tải người dùng', true); }
+    }
+
+    async function deleteUser(id) {
+        if (!confirm('Bạn có chắc muốn xóa user ' + id + '?')) return;
+        try {
+            const r = await fetch('/api/users/' + id, { method: 'DELETE' });
+            const d = await r.json();
+            if (d.success) { showToast('Đã xóa user thành công'); loadUsers(); loadStats(); }
+            else showToast('Lỗi xóa user', true);
+        } catch (e) { showToast('Lỗi kết nối', true); }
+    }
+
+    /* ══════════════════════════════════════════════
+       ORDERS TABLE
+       ══════════════════════════════════════════════ */
+    let allOrders = [];
+    async function loadOrders() {
+        const statusFilter = document.getElementById('filter-orders').value;
+        try {
+            const url = '/api/orders' + (statusFilter ? '?status=' + encodeURIComponent(statusFilter) : '');
+            const r = await fetch(url);
+            allOrders = await r.json();
+            renderOrdersTable();
+        } catch (e) { console.error('Orders error:', e); showToast('Lỗi tải đơn hàng', true); }
+    }
+
+    function renderOrdersTable() {
+        const search = (document.getElementById('search-orders').value || '').toLowerCase();
+        let filtered = allOrders;
+        if (search) {
+            filtered = allOrders.filter(o =>
+                (o.customer_name || '').toLowerCase().includes(search) ||
+                (o.product_name || '').toLowerCase().includes(search) ||
+                (o.id || '').toLowerCase().includes(search)
+            );
+        }
+        document.getElementById('sidebar-badge-orders').textContent = filtered.length;
+        const tbody = document.getElementById('table-orders');
+        if (filtered.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><span class="empty-icon">📭</span>Không có đơn hàng</td></tr>';
+            return;
+        }
+        tbody.innerHTML = filtered.map((o, idx) => `
+            <tr>
+                <td><span class="table-id" title="${esc(o.id)}">${(o.id || '').substring(0, 8)}…</span></td>
+                <td><strong>${esc(o.customer_name) || '—'}</strong></td>
+                <td>${esc(o.product_name) || '—'}</td>
+                <td>${o.quantity || 0}</td>
+                <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(o.address)}">${esc(o.address) || '—'}</td>
+                <td>
+                    <select class="status-select" data-idx="${idx}">
+                        <option value="Đang xử lý" ${o.status==='Đang xử lý'?'selected':''}>🟡 Đang xử lý</option>
+                        <option value="Đã giao" ${o.status==='Đã giao'?'selected':''}>🟢 Đã giao</option>
+                        <option value="Đã hủy" ${o.status==='Đã hủy'?'selected':''}>🔴 Đã hủy</option>
+                    </select>
+                </td>
+                <td style="font-size:12px;color:var(--text-light)">${fmtDate(o.created_at)}</td>
+            </tr>
+        `).join('');
+        tbody.querySelectorAll('.status-select').forEach(sel => {
+            sel.addEventListener('change', function() {
+                const i = parseInt(this.dataset.idx);
+                const o = filtered[i];
+                updateOrderStatus(o.id, o.user_id, this.value);
+            });
+        });
+    }
+
+    async function updateOrderStatus(orderId, userId, newStatus) {
+        try {
+            const r = await fetch('/api/orders/' + orderId, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus, user_id: userId })
+            });
+            const d = await r.json();
+            if (d.success) { showToast('Đã cập nhật trạng thái'); loadStats(); loadDashboardCharts(); }
+            else showToast('Lỗi cập nhật', true);
+        } catch (e) { showToast('Lỗi kết nối', true); }
+    }
+
+    /* ══════════════════════════════════════════════
+       PRODUCTS TABLE
+       ══════════════════════════════════════════════ */
+    async function loadProducts() {
+        const search = document.getElementById('search-products').value;
+        try {
+            const r = await fetch('/api/products?search=' + encodeURIComponent(search));
+            const prods = await r.json();
+            document.getElementById('sidebar-badge-products').textContent = prods.length;
+            const tbody = document.getElementById('table-products');
+            if (prods.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state"><span class="empty-icon">💄</span>Không có sản phẩm</td></tr>';
+                return;
+            }
+            tbody.innerHTML = prods.map((p, i) => `
+                <tr>
+                    <td style="color:var(--text-light)">${i + 1}</td>
+                    <td><strong>${esc(p.name)}</strong></td>
+                    <td style="font-weight:600;color:#4a90d9">${fmt(p.price)} ₫</td>
+                    <td>${(p.skintype && p.skintype.length) ? p.skintype.map(s => `<span class="activity-badge badge-skin">${esc(s)}</span>`).join(' ') : '<span style="color:var(--text-light)">—</span>'}</td>
+                    <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-light)" title="${esc(p.description || '')}">${esc(p.description) || '—'}</td>
+                </tr>
+            `).join('');
+        } catch (e) { console.error('Products error:', e); showToast('Lỗi tải sản phẩm', true); }
+    }
+
+    /* ══════════════════════════════════════════════
+       SEARCH DEBOUNCE & INIT
+       ══════════════════════════════════════════════ */
+    let st;
+    function debounce(fn) { return () => { clearTimeout(st); st = setTimeout(fn, 400); }; }
+    document.getElementById('search-users').addEventListener('input', debounce(loadUsers));
+    document.getElementById('search-orders').addEventListener('input', debounce(renderOrdersTable));
+    document.getElementById('search-products').addEventListener('input', debounce(loadProducts));
+
+    // Init
+    loadStats();
+    loadDashboardCharts();
+    loadUsers();
+    loadOrders();
+
+    /* ══════════════════════════════════════════════
+       THEME TOGGLE
+       ══════════════════════════════════════════════ */
+    function setTheme(mode) {
+        if (mode === 'dark') {
+            document.body.classList.add('dark');
+            document.getElementById('btn-dark').classList.add('active');
+            document.getElementById('btn-light').classList.remove('active');
+        } else {
+            document.body.classList.remove('dark');
+            document.getElementById('btn-light').classList.add('active');
+            document.getElementById('btn-dark').classList.remove('active');
+        }
+        localStorage.setItem('lumi-theme', mode);
+    }
+    // Make setTheme global so onclick works
+    window.setTheme = setTheme;
+    // Restore saved theme
+    const saved = localStorage.getItem('lumi-theme');
+    if (saved) setTheme(saved);
+    loadProducts();
+    </script>
+</body>
+</html>

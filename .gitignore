@@ -1,0 +1,48 @@
+# ── Secrets & Credentials ─────────────────────────────────
+.env
+firebase-credentials.json
+
+# ── Python Cache & Build ───────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+
+# ── Virtual Environments ───────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Logs & Temporary Debug Files ──────────────────────────
+*.log
+log.txt
+ai_error.txt
+status.txt
+origin.txt
+diff.txt
+
+# ── Old / Duplicate Source Code ────────────────────────────
+Lumibeauty_bot-main/
+
+# ── Báo cáo đồ án (giữ ở máy, không đẩy lên GitHub) ────────
+BaoCao_DoAn_LumiBeauty_Full.md
+BaoCao_LumiBeauty.md
+bao_cao_cloud_computing.md
+demo_guide.md
+
+# ── IDE & Editor ───────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.user
+
+# ── OS Files ──────────────────────────────────────────────
+.DS_Store
+Thumbs.db
